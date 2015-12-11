@@ -18,11 +18,12 @@ private:
 		rightstick=new Joystick(2);
 		leftMotor=new CANTalon(3);
 		rightMotor=new CANTalon(4);
+		drive=new Driving_test(leftMotor,rightMotor,leftstick,rightstick);
 	}
 
 	void AutonomousInit()
 	{
-
+		drive->moveFeet(2);
 	}
 
 	void AutonomousPeriodic()
@@ -32,7 +33,6 @@ private:
 
 	void TeleopInit()
 	{
-		drive=new Driving_test(leftMotor,rightMotor,leftstick,rightstick);
 	}
 
 	void TeleopPeriodic()

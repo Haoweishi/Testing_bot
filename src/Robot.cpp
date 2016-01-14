@@ -18,8 +18,8 @@ private:
 	void RobotInit()
 	{
 		printf("testing printf");
-		rightMotor=new CANTalon(4);
-		leftMotor =new CANTalon(3);
+		leftMotor=new CANTalon(4,5);
+		rightMotor =new CANTalon(3,5);
 		leftstick =new Joystick(1);
 		rightstick=new Joystick(2);
 		lw = LiveWindow::GetInstance();
@@ -36,9 +36,9 @@ private:
 	{
 		printf("AUTO started\n");
 		mode="auto";
-		drive->moveFeet(2);
+		drive->moveFeet(10);
 		Wait(.5);
-		drive->arc(3.1415,2);
+		//drive->arc(3.1415,2);
 		Wait(5);
 		printf("AUTO finished\n");
 	}

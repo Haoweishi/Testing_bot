@@ -23,37 +23,19 @@ public:
 		rightMot->Set(rightJoy->GetY());
 	}
 	void moveFeet(double feet=1,double speed=.5){
-		leftMot->SetPosition(0);
-		rightMot->SetPosition(0);
+		resetPos();
 		printf("moving %f feet", feet);
-		while(abs(leftMot->GetEncPosition())< abs(feet/(3.1415*diameter)*1000.0)){
+		int destination=abs(feet/(3.1415*diameter)*1000.0);
+		while(abs(leftMot->GetEncPosition())< destination){
 			//note on syntax boolean?x:y returns x if boolean is true and y if boolean is false
-			leftMot->Set(feet>0?-speed*.85:speed*.85);
-			rightMot->Set(feet>0?speed:-speed);
+			leftMot->Set((feet>0?-speed:speed)*(1-abs(leftMot->GetEncPosition())/destination)*.85);
+			rightMot->Set((feet>0?speed:-speed)*(1-abs(leftMot->GetEncPosition())/destination));
 			printf("left:%d  right%d \n",abs(leftMot->GetEncPosition()),abs(rightMot->GetEncPosition()));
 		}
 		printf("done moving straight");
 		leftMot->Set(0);rightMot->Set(0);
 	}
-	//@params theta is in radians, radius is in feet, omega is center speed.
-	void arc(double theta=(3.1415/2),double radius=1,double omega=.5,bool left=true){
-		radius=abs(radius);
-		leftMot->SetPosition(0);
-		rightMot->SetPosition(0);
-		printf("moving to %f feet away curved to %s",radius*sqrt(2),left?"left":"right");
-		const double arcLengthLeft=(radius-left?width:-width/2)*theta;
-		const double arcLengthRight=(radius+left?width:-width/2)*theta;
-		while(left?rightMot->GetEncPosition()<arcLengthRight:leftMot->GetEncPosition()<arcLengthLeft){
-			if(leftMot->GetEncVel()==rightMot->GetEncVel()){
-			leftMot->Set(omega*(radius-(left?(width/2):(-width/2))));
-			}else
-				leftMot->Set(0);
-			rightMot->Set(omega*(radius+(left?(width/2):(-width/2))));
-		}
-		leftMot->Set(0);
-		rightMot->Set(0);
-		printf("finished the arc");
-	}
+
 private:
 	//all units are in feet.
 	const double diameter=.5;
